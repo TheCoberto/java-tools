@@ -5,7 +5,8 @@ Shared tools for TheCoberto's Minecraft Java (Fabric) mods. Clone it next to the
 ```
 C:\Repos\Mods\Minecraft Java\
   java-tools\                          <- this repo
-  builds\                              <- every built mod jar ends up here
+  builds\fabric\                       <- every built Fabric mod jar ends up here
+  builds\paper\                        <- the Paper plugin jars, for the server
   silk-touch-spawners-minecraft-java\
   zoom-minecraft-java\
   ...
@@ -15,8 +16,8 @@ In VS Code, open the `minecraft-java-mod-suite.code-workspace` workspace and use
 
 | Script | What it does |
 | --- | --- |
-| `build-all.ps1` | Builds every mod (or one) into `builds` |
-| `install.ps1` | Installs everything in `builds` into Minecraft on this PC, plus Fabric if it's missing |
+| `build-all.ps1` | Builds every mod (or one) into `builds\fabric` |
+| `install.ps1` | Installs everything in `builds\fabric` into Minecraft on this PC, plus Fabric if it's missing |
 | `status.ps1` | One table of what still needs doing across every mod |
 | `release.ps1` | Releases a mod start to finish: bump, PR, merge, release, build, install |
 | `bump.ps1` | Updates a mod's version |
@@ -32,7 +33,7 @@ From a terminal, run them with `powershell -ExecutionPolicy Bypass -File <script
 .\build-all.ps1 -Repo zoom-minecraft-java    # one mod
 ```
 
-Runs `gradlew build` in each mod and copies the jar into `builds\` as `<Mod-Name>-<version>.jar` (the name comes from `fabric.mod.json`, the version from `gradle.properties`), removing older versions of that mod. A mod that fails to build is listed at the end; the rest still build.
+Runs `gradlew build` in each mod and copies the jar into `builds\fabric\` as `<Mod-Name>-<version>.jar` (the name comes from `fabric.mod.json`, the version from `gradle.properties`), removing older versions of that mod. A mod that fails to build is listed at the end; the rest still build.
 
 ## install.ps1
 
@@ -43,14 +44,14 @@ Runs `gradlew build` in each mod and copies the jar into `builds\` as `<Mod-Name
 .\install.ps1 -Force       # install even while Minecraft is running
 ```
 
-Installs every mod in `builds\` into `%APPDATA%\.minecraft\mods`:
+Installs every mod in `builds\fabric\` into `%APPDATA%\.minecraft\mods`:
 
 - Each mod **replaces** any installed jar with the same mod id (read from the jar's `fabric.mod.json`), whatever it's called, instead of being added next to it.
 - Mods that already match the build are left alone.
-- If `builds\` holds several versions of a mod, only the newest is installed.
+- If `builds\fabric\` holds several versions of a mod, only the newest is installed.
 - Every replaced or removed jar is backed up to `mod-backups\<date>` next to the repos.
 - Mods listed in `retired.json` are removed. List a mod there when another one replaces it.
-- Jars that aren't in `builds\` or `retired.json` are never touched.
+- Jars that aren't in `builds\fabric\` or `retired.json` are never touched.
 
 It also makes sure the mods can load:
 
@@ -66,7 +67,7 @@ Close Minecraft first: Windows locks mod jars while the game runs, so the script
 .\status.ps1 -NoFetch   # skip fetching from GitHub (faster)
 ```
 
-One row per repo: uncommitted or unpushed work, open PRs, the latest release, mod changes since that release, and whether `builds\` has the current version. Then whether Minecraft has everything in `builds\` installed. READMEs, other Markdown files, `.github` and git settings don't count as changes. Exits with code 1 when something needs doing.
+One row per repo: uncommitted or unpushed work, open PRs, the latest release, mod changes since that release, and whether `builds\fabric\` has the current version. Then whether Minecraft has everything in `builds\fabric\` installed. READMEs, other Markdown files, `.github`, git settings and `paper-plugin\` (the Paper plugin version) don't count as changes. Exits with code 1 when something needs doing.
 
 ## release.ps1
 
@@ -81,7 +82,7 @@ Commit and merge the change first; this does the rest:
 1. Checks the repo is on its default branch, clean, and pushed, and pulls.
 2. Bumps the version on a `release-<version>` branch and adds the notes to the mod's `changelog.txt`/`.md` if it has one (in that file's style; an `Unreleased` heading is renamed to the version instead). Opens a PR, waits for the checks and merges it.
 3. Creates the GitHub release `v<version>`, titled `<Mod name> <version>`.
-4. Waits for the release build (each repo's GitHub Actions workflow attaches the jar), downloads the jar into `builds\` and removes older versions of that mod.
+4. Waits for the release build (each repo's GitHub Actions workflow attaches the jar), downloads the jar into `builds\fabric\` and removes older versions of that mod.
 5. Runs `install.ps1`, unless Minecraft is running or you pass `-NoInstall`.
 
 `-CommitTrailer` and `-PrFooter` add lines to the end of the bump commit and PR description.

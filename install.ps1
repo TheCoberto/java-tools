@@ -1,9 +1,9 @@
 <#
 .SYNOPSIS
-  Installs the mods in the builds folder into Minecraft Java on this PC.
+  Installs the mods in the builds\fabric folder into Minecraft Java on this PC.
 
 .DESCRIPTION
-  Copies every mod in builds\ into .minecraft\mods:
+  Copies every mod in builds\fabric\ into .minecraft\mods:
     - Each mod replaces the installed jar with the same mod id (from its
       fabric.mod.json), whatever that jar is called, instead of being added
       next to it.
@@ -28,7 +28,7 @@
   The folder that holds the mod repos. Defaults to the folder java-tools is in.
 
 .PARAMETER BuildsDir
-  Where the mod jars are. Defaults to <Workspace>\builds.
+  Where the mod jars are. Defaults to <Workspace>\builds\fabric.
 
 .PARAMETER MinecraftDir
   The .minecraft folder. Defaults to %APPDATA%\.minecraft.
@@ -55,7 +55,7 @@ $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'lib.ps1')
 
 $Workspace = (Resolve-Path -LiteralPath $Workspace).Path
-if (-not $BuildsDir) { $BuildsDir = Join-Path $Workspace 'builds' }
+if (-not $BuildsDir) { $BuildsDir = Join-Path $Workspace 'builds\fabric' }
 if (-not (Test-Path -LiteralPath $BuildsDir)) { throw "No builds folder at $BuildsDir. Run build-all.ps1 first." }
 if (-not $MinecraftDir) { $MinecraftDir = Get-MinecraftDir }
 if (-not (Test-Path -LiteralPath $MinecraftDir)) { throw "Couldn't find $MinecraftDir. Install Minecraft Java and start it once, or pass -MinecraftDir." }

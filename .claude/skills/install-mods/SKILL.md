@@ -1,6 +1,6 @@
 ---
 name: install-mods
-description: Install the mods in the builds folder into Minecraft Java on this PC (.minecraft\mods), replacing old versions, removing retired mods and setting up Fabric if needed. Use when the user wants to play or test the Java mods.
+description: Install the mods in builds\fabric into Minecraft Java on this PC (.minecraft\mods), replacing old versions, removing retired mods and setting up Fabric if needed. Use when the user wants to play or test the Java mods.
 ---
 
 1. From java-tools, preview: `powershell -NoProfile -ExecutionPolicy Bypass -File install.ps1 -WhatIf`.

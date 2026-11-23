@@ -1,7 +1,7 @@
 <#
 .SYNOPSIS
   Releases a mod from start to finish: bump, PR, merge, GitHub release,
-  download the jar into builds\, and install it into Minecraft.
+  download the jar into builds\fabric\, and install it into Minecraft.
 
 .DESCRIPTION
   1. Checks the repo is on its default branch with nothing uncommitted and
@@ -12,7 +12,7 @@
      pushes and opens a PR. Skipped with -NoBump.
   3. Waits for the PR's checks, then merges it with a merge commit.
   4. Creates the GitHub release v<version>, titled "<Mod name> <version>".
-  5. Waits for the release build, then downloads its jar into builds\ as
+  5. Waits for the release build, then downloads its jar into builds\fabric\ as
      <Mod-Name>-<version>.jar, replacing older versions of the same mod.
   6. Runs install.ps1, unless -NoInstall or Minecraft is running.
 
@@ -69,7 +69,7 @@ $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'lib.ps1')
 
 $workspace = Split-Path $PSScriptRoot -Parent
-$builds = Join-Path $workspace 'builds'
+$builds = Join-Path $workspace 'builds\fabric'
 if (-not (Test-Path -LiteralPath $Repo)) { $Repo = Join-Path $workspace $Repo }
 $Repo = (Resolve-Path -LiteralPath $Repo).Path
 $repoName = Split-Path $Repo -Leaf
@@ -187,7 +187,7 @@ if ($WhatIf) {
     $cl = if ($changelog) { "add the notes to $($changelog.FullName.Substring($Repo.Length + 1)) (or rename its Unreleased heading)" } else { 'no changelog file to update' }
     Write-Host "  Would bump to $new on branch release-$new, $cl, open a PR, wait for checks and merge it."
   }
-  Write-Host "  Would create release $tag, wait for its build, download $($info.CleanName)-$new.jar into builds\ (removing older versions) and $(if ($NoInstall) { 'not install it' } else { 'run install.ps1' })."
+  Write-Host "  Would create release $tag, wait for its build, download $($info.CleanName)-$new.jar into builds\fabric\ (removing older versions) and $(if ($NoInstall) { 'not install it' } else { 'run install.ps1' })."
   exit 0
 }
 
@@ -252,7 +252,7 @@ try {
   $asset = Get-ChildItem -LiteralPath $temp -Filter '*.jar' | Where-Object { $_.Name -notmatch '-(sources|dev|javadoc)\.jar$' } | Select-Object -First 1
   if (-not $asset) { throw "Release $tag has no jar attached." }
   $saved = Save-Build $asset.FullName $info $builds
-  Write-Host "  builds\$(Split-Path $saved -Leaf)"
+  Write-Host "  builds\fabric\$(Split-Path $saved -Leaf)"
 } finally { Remove-Item -LiteralPath $temp -Recurse -Force -ErrorAction SilentlyContinue }
 
 # 6. Install.

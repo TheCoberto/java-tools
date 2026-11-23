@@ -1,10 +1,10 @@
 <#
 .SYNOPSIS
-  Builds every mod (or one) and puts the jars in the builds folder.
+  Builds every mod (or one) and puts the jars in the builds\fabric folder.
 
 .DESCRIPTION
   Runs "gradlew build" in each mod repo next to java-tools and copies the jar
-  into builds\ as <Mod-Name>-<version>.jar (like Zoom-0.1.0.jar), removing older
+  into builds\fabric\ as <Mod-Name>-<version>.jar (like Zoom-0.1.0.jar), removing older
   versions of that mod. A mod that fails to build is listed at the end; the
   rest still build.
 
@@ -15,7 +15,7 @@
     powershell -ExecutionPolicy Bypass -File build-all.ps1               # every mod
     powershell -ExecutionPolicy Bypass -File build-all.ps1 -Repo zoom-minecraft-java
 
-  For a release, use release.ps1 instead: it puts the GitHub release's jar in builds\.
+  For a release, use release.ps1 instead: it puts the GitHub release's jar in builds\fabric\.
 
 .PARAMETER Workspace
   The folder that holds the mod repos. Defaults to the folder java-tools is in.
@@ -24,7 +24,7 @@
   Build only this mod: a folder name next to java-tools, or a path.
 
 .PARAMETER OutDir
-  Where to put the jars. Defaults to <Workspace>\builds.
+  Where to put the jars. Defaults to <Workspace>\builds\fabric.
 #>
 param(
   [string]$Workspace = (Split-Path $PSScriptRoot -Parent),
@@ -36,7 +36,7 @@ $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'lib.ps1')
 
 $Workspace = (Resolve-Path -LiteralPath $Workspace).Path
-if (-not $OutDir) { $OutDir = Join-Path $Workspace 'builds' }
+if (-not $OutDir) { $OutDir = Join-Path $Workspace 'builds\fabric' }
 
 if ($Repo) {
   if (-not (Test-Path -LiteralPath $Repo)) { $Repo = Join-Path $Workspace $Repo }

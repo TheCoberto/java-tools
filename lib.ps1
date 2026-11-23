@@ -26,7 +26,7 @@ function Read-Properties([string]$Path) {
   return $props
 }
 
-# "Silk Touch Spawners" -> "Silk-Touch-Spawners", for file names in builds\.
+# "Silk Touch Spawners" -> "Silk-Touch-Spawners", for file names in builds\fabric\.
 function Get-CleanName([string]$Name) {
   return (($Name -replace '[\\/:*?"<>|]', '').Trim() -replace '\s+', '-')
 }
@@ -91,7 +91,7 @@ function Get-BuiltJar([string]$Repo) {
     Sort-Object LastWriteTime -Descending | Select-Object -First 1
 }
 
-# Copies a jar into builds\ as <Clean-Name>-<version>.jar and removes older versions of that mod.
+# Copies a jar into builds\fabric\ as <Clean-Name>-<version>.jar and removes older versions of that mod.
 function Save-Build([string]$Jar, $Info, [string]$BuildsDir) {
   New-Item -ItemType Directory -Path $BuildsDir -Force | Out-Null
   $pattern = "^$([regex]::Escape($Info.CleanName))-\d+\.\d+\.\d+\.jar$"
