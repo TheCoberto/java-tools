@@ -9,7 +9,7 @@ Exit code 0 means everything is committed, pushed, released, built and installed
 - Local not ok: commit on a branch, PR, merge (CLAUDE.md).
 - Open PRs: ask whether to merge them.
 - To do: release with `/release-mod <repo>`.
-- Build missing or old: `/release-mod` downloads it; for an existing release, `gh release download <tag> -R <owner/repo> -D ..\builds -p *.jar`, rename it to `<Mod-Name>-<version>.jar` and remove the older version.
+- Build missing or old: `/release-mod` downloads it; for an existing release, `gh release download <tag> -R <owner/repo> -D ..\builds\fabric -p *.jar`, rename it to `<Mod-Name>-<version>.jar` and remove the older version.
 - Minecraft not up to date: `/install-mods`.
 
 Don't repeat the whole table back to the user.

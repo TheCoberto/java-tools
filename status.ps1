@@ -8,11 +8,12 @@
     - PRs:       open pull requests
     - Release:   the latest GitHub release
     - To do:     mod changes since that release, or a version that isn't released yet
-    - Build:     whether builds\ has the current version's jar
-  Then whether Minecraft has everything in builds\ installed.
+    - Build:     whether builds\fabric\ has the current version's jar
+  Then whether Minecraft has everything in builds\fabric\ installed.
 
-  READMEs, other Markdown files, .github and git settings don't count as
-  changes: they aren't part of the mod, so they don't need a release.
+  READMEs, other Markdown files, .github, git settings and paper-plugin\ (the
+  Paper plugin version) don't count as changes: they aren't part of the Fabric
+  mod, so they don't need a release.
 
     powershell -ExecutionPolicy Bypass -File status.ps1            # from java-tools
     powershell -ExecutionPolicy Bypass -File status.ps1 -NoFetch   # skip git fetch (faster)
@@ -34,7 +35,7 @@ $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'lib.ps1')
 
 $Workspace = (Resolve-Path -LiteralPath $Workspace).Path
-$buildsDir = Join-Path $Workspace 'builds'
+$buildsDir = Join-Path $Workspace 'builds\fabric'
 $repos = @(Get-ModRepos $Workspace) + @($PSScriptRoot) | Where-Object { Test-Path (Join-Path $_ '.git') }
 
 # Windows PowerShell turns redirected error output into a failure, so relax that here.
@@ -104,14 +105,14 @@ for ($i = 0; $i -lt $withSlug.Count; $i++) {
   $row.Release = if ($tag) { $tag } elseif ($row.IsTools) { '-' } else { 'none' }
 }
 
-# What still needs releasing, and whether builds\ has the current version.
+# What still needs releasing, and whether builds\fabric\ has the current version.
 foreach ($row in $rows | Where-Object { -not $_.IsTools }) {
   $tag = ($row.Release -replace ' \(pre\)$', '')
   $todo = @()
   if ($tag -and $tag -notin @('?', 'none')) {
     if ($row.Info.Version -and ($tag -replace '^v', '') -ne $row.Info.Version) { $todo += "$($row.Info.Version) not released" }
     $changed = @(Invoke-Git $row.Repo diff --name-only $tag "origin/$($row.Default)" |
-      Where-Object { $_ -notmatch '(^|/)README|\.md$|^\.github/|^\.git(attributes|ignore)$|^LICENSE' })
+      Where-Object { $_ -notmatch '(^|/)README|\.md$|^\.github/|^\.git(attributes|ignore)$|^LICENSE|^paper-plugin/' })
     if ($changed.Count) { $todo += "$($changed.Count) file(s) changed since $tag" }
   } elseif ($tag -eq 'none') { $todo += 'never released' }
   $row.Todo = if ($todo) { $todo -join ', ' } else { '-' }
@@ -132,7 +133,7 @@ $install = & powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $PSS
   ForEach-Object { "$_" } | Where-Object { $_ -match 'Would change|update|install |remove|ERROR|warn' }
 $installLine = ($install | Where-Object { $_ -match 'Would change' }) -replace '\s*\(nothing was changed\)', ''
 $installOk = $installLine -match '^Would change: 0 updated, 0 installed, 0 removed'
-if ($installOk) { Write-Host 'Minecraft: everything in builds is installed.' -ForegroundColor Green }
+if ($installOk) { Write-Host 'Minecraft: everything in builds\fabric is installed.' -ForegroundColor Green }
 else { Write-Host 'Minecraft: not up to date. Run install.ps1:' -ForegroundColor Yellow; $install | ForEach-Object { Write-Host "  $($_.Trim())" } }
 
 $needs = @($rows | Where-Object {
