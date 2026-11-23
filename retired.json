@@ -1,3 +1,5 @@
 {
-  "mods": []
+  "mods": [
+    { "id": "coberto_teams", "reason": "renamed to Civilians" }
+  ]
 }
