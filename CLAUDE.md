@@ -1,6 +1,6 @@
 # Java mod suite
 
-TheCoberto's Minecraft Java mods (Fabric, Minecraft 1.21.1). Each mod is its own GitHub repo next to this one in `..\`; `..\builds\fabric\` holds the built mod jars and `..\builds\paper\` the Paper plugin jars (built from each repo's `paper-plugin\` folder, for the server; the scripts here only handle Fabric). Scripts here run in Windows PowerShell 5.1: `powershell -NoProfile -ExecutionPolicy Bypass -File <script>`.
+TheCoberto's Minecraft Java mods (Fabric, Minecraft 26.2; Mojang names, no Yarn, Java 25). Each mod is its own GitHub repo next to this one in `..\`; `..\builds\fabric\` holds the built mod jars and `..\builds\paper\` the Paper plugin jars (built from each repo's `paper-plugin\` folder, for the server; the scripts here only handle Fabric). Scripts here run in Windows PowerShell 5.1: `powershell -NoProfile -ExecutionPolicy Bypass -File <script>`.
 
 ## Scripts (use these instead of doing the steps by hand)
 - `status.ps1`: one table of what needs doing across every repo (uncommitted, unpushed, open PRs, unreleased changes, builds, installed). Start here.
