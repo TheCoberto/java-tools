@@ -10,6 +10,7 @@ TheCoberto's Minecraft Java mods (Fabric, Minecraft 26.2; Mojang names, no Yarn,
 
 ## Conventions
 - Never commit to the default branch (`main`). Branch, push, open a PR, wait for checks, merge with a merge commit (`gh pr merge --merge --delete-branch`).
+- **Every change to a mod or Paper plugin updates that repo's `CHANGELOG.md` in the same PR** (create one if the repo has none: newest first, `## <version>` headings, short player-facing bullets; Fabric mod and `paper-plugin\` changes can share the file under "Fabric" and "Paper" sub-bullets). Release notes are written from it. When the change reaches the Paper server, also update the server's player docs (`..\paper-server\CLAUDE.md`: changelog, Discord news, What's New, wiki).
 - Changes to READMEs or workflows don't need a release. Changes to the mod (src, Gradle files) do: bump the version (`release.ps1` does it).
 - The version lives only in `mod_version` in `gradle.properties`; `fabric.mod.json` and the jar name pick it up at build time.
 - Release title: `<Mod name> <version>` (like "Zoom 0.1.0"), tag `v<version>`. Notes: short player-facing bullets, no PR lists. Each repo's GitHub Actions build attaches the jar to the release.
